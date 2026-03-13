@@ -137,7 +137,7 @@ footer{margin-top:60px;padding:25px;text-align:center;background:#fff;border-top
 <header>
 <div class="site-title">ZAG <span>Archive</span></div>
 <nav>
-<a href="../../..">Back to Emulators</a>
+<a href="https://zagv2.github.io/Emulators/">Back to Emulators</a>
 <div class="dropdown">
 <button class="dropbtn">Sections ▼</button>
 <div class="dropdown-content">
