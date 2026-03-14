@@ -199,7 +199,7 @@ function fetchPage(query, page) {
         try { const json = JSON.parse(data); resolve(json.items || []) } 
         catch (err) { resolve([]) }
       })
-    }).on('error', err => reject(err))
+    }).on('error', err => reject(err)); // <-- syntax fix applied here
   })
 }
 
