@@ -67,33 +67,6 @@ function detectConsole(name) {
 }
 
 // ==================================================
-//                 SEARCH QUERIES
-// ==================================================
-const queries = [
-  "emulator","console emulator","retro emulator","open source emulator","hardware emulator",
-  "nes emulator","snes emulator","n64 emulator",
-  "gameboy emulator","gba emulator","gbc emulator",
-  "nds emulator","3ds emulator",
-  "ps1 emulator","ps2 emulator","ps3 emulator",
-  "psp emulator","psvita emulator",
-  "switch emulator",
-  "xbox emulator","xbox 360 emulator",
-  "dreamcast emulator","saturn emulator",
-  "mame emulator","arcade emulator",
-  "dos emulator","windows emulator","linux emulator",
-  "android emulator","ios emulator","emulation",
-  "emulator","console-emulation","retro-emulation",
-  "emulator fork:true"
-]
-
-// Alphabet expansion to catch more repos
-"abcdefghijklmnopqrstuvwxyz".split("").forEach(letter => {
-  queries.push(`emulator ${letter}`)
-  queries.push(`console emulator ${letter}`)
-  queries.push(`retro emulator ${letter}`)
-})
-
-// ==================================================
 //                 SLUGIFY FUNCTION
 // ==================================================
 function slugify(text){
@@ -109,7 +82,7 @@ function getLogo(slug) {
     const logoPath = path.join(LOGOS_DIR, `${slug}.${ext}`)
     if (fs.existsSync(logoPath)) return path.relative(TOOLS_DIR, logoPath)
   }
-  return "logos/Default-cover.jpg"
+  return "tools/logos/Default-cover.jpg"
 }
 
 // ==================================================
@@ -120,49 +93,29 @@ function createToolPage(tool){
   const folder = path.join(TOOLS_DIR, consoleFolder, tool.slug)
   if(!fs.existsSync(folder)) fs.mkdirSync(folder,{recursive:true})
 
-  const htmlPath = path.join(folder,"index.html")
+  const htmlPath = path.join(folder, "index.html") // ✅ use tool.slug.html
   const coverImage = tool.cover || getLogo(tool.slug)
 
   const html = `
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- ==================================================
-                       HEAD
-================================================== -->
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${tool.name} - ZAG Archive</title>
-
-<!-- ==================================================
-                       STYLES
-================================================== -->
 <style>
-/* ------------------------------ */
-/*   BODY & HEADER STYLES         */
-/* ------------------------------ */
 body { margin:0; font-family:'Segoe UI',sans-serif; background:#f0f2f5; color:#222; }
 header { background:#fff; padding:15px 40px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 6px rgba(0,0,0,0.1); position:sticky; top:0; z-index:100; flex-wrap:wrap; }
 .site-title { font-weight:700; font-size:20px; color:#1e90ff; text-transform:uppercase; }
 .site-title span { margin-left:5px; }
-
-/* ------------------------------ */
-/*   NAVIGATION STYLES            */
-/* ------------------------------ */
 nav { display:flex; align-items:center; flex-wrap:wrap; }
 nav a { margin-left:25px; text-decoration:none; color:#333; font-weight:500; transition:0.2s; }
 nav a:hover { color:#1e90ff; }
-
 .dropdown { position:relative; display:inline-block; }
 .dropbtn { margin-left:25px; font-weight:500; background:none; border:none; cursor:pointer; color:#333; font-size:16px; }
 .dropdown-content { display:none; position:absolute; background:#fff; min-width:180px; box-shadow:0 6px 12px rgba(0,0,0,0.1); border-radius:6px; overflow:hidden; top:38px; z-index:200; }
 .dropdown-content a { display:block; padding:10px 15px; text-decoration:none; color:#333; font-weight:500; }
 .dropdown-content a:hover { background:#f0f2f5; color:#1e90ff; }
-
-/* ------------------------------ */
-/*   MAIN CONTENT STYLES          */
-/* ------------------------------ */
 .container { max-width:1100px; margin:40px auto; padding:0 20px; }
 .game-header { display:flex; gap:40px; flex-wrap:wrap; align-items:flex-start; }
 .game-cover img { width:100%; max-width:320px; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.1); }
@@ -172,46 +125,26 @@ nav a:hover { color:#1e90ff; }
 .description { margin-top:15px; line-height:1.6; color:#444; }
 .download-btn { display:inline-block; margin-top:15px; padding:6px 14px; font-size:14px; background:#1e90ff; color:#fff; text-decoration:none; border-radius:6px; font-weight:600; transition:0.3s; }
 .download-btn:hover { background:#187bcd; }
-
-/* ------------------------------ */
-/*   FOOTER STYLES                */
-/* ------------------------------ */
 footer { margin-top:60px; padding:25px; text-align:center; background:#fff; border-top:1px solid #ddd; color:#555; font-size:14px; }
-
-/* ------------------------------ */
-/*   RESPONSIVE STYLES            */
-/* ------------------------------ */
 @media(max-width:768px) {
-  header { flex-direction:row; padding:15px 20px; }
-  nav { flex-wrap:wrap; }
-  nav a, .dropbtn { margin-left:0; margin-right:15px; margin-bottom:8px; }
-  .game-header { flex-direction:column; align-items:center; }
-  .game-cover img { max-width:100%; }
-  .game-info h1 { text-align:center; font-size:22px; }
-  .meta, .description { text-align:center; }
-  .download-btn { display:block; width:100%; text-align:center; }
+header { flex-direction:row; padding:15px 20px; }
+nav { flex-wrap:wrap; }
+nav a, .dropbtn { margin-left:0; margin-right:15px; margin-bottom:8px; }
+.game-header { flex-direction:column; align-items:center; }
+.game-cover img { max-width:100%; }
+.game-info h1 { text-align:center; font-size:22px; }
+.meta, .description { text-align:center; }
+.download-btn { display:block; width:100%; text-align:center; }
 }
 </style>
 </head>
-
-<!-- ==================================================
-                       BODY
-================================================== -->
 <body>
-
-<!-- ==================================================
-                       HEADER
-================================================== -->
 <header>
   <div class="site-title">ZAG <span>Archive</span></div>
-
-  <!-- Navigation -->
   <nav>
     <a href="https://zagv2.github.io/ZAGArchive-/">Home</a>
     <a href="https://zagv2.github.io/ZAGArchive-/about.html">About</a>
     <a href="https://zagv2.github.io/ZAGArchive-/contact.html">Contact</a>
-
-    <!-- Dropdown Sections -->
     <div class="dropdown">
       <button class="dropbtn">Sections ▼</button>
       <div class="dropdown-content">
@@ -220,65 +153,42 @@ footer { margin-top:60px; padding:25px; text-align:center; background:#fff; bord
         <a href="https://zagv2.github.io/resources-tools/">Resources & Tools</a>
       </div>
     </div>
-
     <a class="download-btn" href="https://zagv2.github.io/Emulators/">← Back to Emulators</a>
   </nav>
 </header>
-
-<!-- ==================================================
-                       GAME INFO
-================================================== -->
 <div class="container">
   <div class="game-header">
     <div class="game-cover">
       <img src="${coverImage}" alt="${tool.name} Cover">
     </div>
-
     <div class="game-info">
       <h1>${tool.name}</h1>
-
       <div class="meta">
         <p><strong>Platform:</strong> ${tool.console || "Multi Platform"}</p>
         <p><strong>Developer:</strong> ${tool.creator}</p>
         <p><strong>Version:</strong> ${tool.version || "..."}</p>
       </div>
-
       <div class="description">
         ${tool.description || "..."}
       </div>
-
       <a class="download-btn" href="${tool.url}" target="_blank">Visit Official Page</a>
     </div>
   </div>
 </div>
-
-<!-- ==================================================
-                       FOOTER
-================================================== -->
 <footer>© 2026 ZAG Archive - Emulators</footer>
-
-<!-- ==================================================
-                       SCRIPTS
-================================================== -->
 <script>
-// ------------------------------
-// Dropdown Menu Toggle
-// ------------------------------
 const btn = document.querySelector('.dropbtn')
 const dropdown = document.querySelector('.dropdown-content')
-
 btn.addEventListener('click', e => {
   e.preventDefault()
   dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block"
 })
-
 window.addEventListener('click', e => {
   if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
     dropdown.style.display = "none"
   }
 })
 </script>
-
 </body>
 </html>
 `
@@ -287,21 +197,66 @@ window.addEventListener('click', e => {
 }
 
 // ==================================================
-//           FETCH GITHUB REPOS FUNCTION
+//           FETCH GITHUB REPOS FUNCTION (FIXED)
 // ==================================================
 function fetchPage(query, page) {
   const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(query)}&sort=stars&order=desc&per_page=100&page=${page}`
+
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+  const headers = {
+    'User-Agent': 'node.js',
+    ...(GITHUB_TOKEN ? { 'Authorization': `token ${GITHUB_TOKEN}` } : {})
+  }
+
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'node.js' } }, res => {
+    https.get(url, { headers }, res => {
       let data = ''
       res.on('data', chunk => data += chunk)
       res.on('end', () => {
-        try { const json = JSON.parse(data); resolve(json.items || []) } 
-        catch (err) { resolve([]) }
+        try {
+          const json = JSON.parse(data)
+          if (json.items && json.items.length > 0) {
+            resolve(json.items) // ✅ return real repos only
+          } else {
+            console.log("No repos found for query:", query, "Page:", page, json.message || "")
+            resolve([]) // ✅ return empty array instead of fake tool
+          }
+        } catch (err) {
+          console.error("Failed to parse JSON for query:", query, err)
+          resolve([]) // ✅ return empty array on parse error
+        }
       })
     }).on('error', err => reject(err))
   })
 }
+
+// ==================================================
+//            ROTATION SYSTEM PER RUN
+// ==================================================
+// ✅ FIXED: Define batches BEFORE using them
+const popularQueries = ["dolphin emulator", "pcsx2 emulator"];
+const starQueries = ["emulator stars:>500"];
+const recentQueries = ["emulator pushed:>2023-01-01"];
+const alphabetQueries = ["emulator a", "emulator b"];
+const oldEmulatorQueries = ["emulator created:<2015-01-01"];
+
+const allBatches = [
+  popularQueries,
+  starQueries,
+  recentQueries,
+  alphabetQueries,
+  oldEmulatorQueries
+]
+
+// ✅ FIXED: Last batch file
+const batchFile = ".lastBatchIndex.json"
+let lastBatchIndex = 0
+if (!fs.existsSync(batchFile)) fs.writeFileSync(batchFile, JSON.stringify({ lastBatchIndex: 0 }, null, 2))
+try { lastBatchIndex = JSON.parse(fs.readFileSync(batchFile)).lastBatchIndex || 0 } catch { lastBatchIndex = 0 }
+
+const queries = allBatches[lastBatchIndex]
+console.log("Running batch index:", lastBatchIndex)
+console.log("Queries for this run:", queries)
 
 // ==================================================
 //                  MAIN RUN FUNCTION
@@ -309,17 +264,17 @@ function fetchPage(query, page) {
 async function run() {
   for (const query of queries) {
     let page = 1
-    while (true) {
+    while (page <= 10) {
       const repos = await fetchPage(query, page)
-      if (!repos.length) break
-
+if (!repos || repos.length === 0) {
+  page++
+  continue
+}
       for (const repo of repos) {
         if (seen.has(repo.html_url)) continue
         seen.add(repo.html_url)
-
         const slug = slugify(repo.name)
         const cover = repo.owner.avatar_url || getLogo(slug)
-
         const tool = {
           name: repo.name,
           slug,
@@ -330,14 +285,15 @@ async function run() {
           cover,
           description: repo.description || "..."
         }
-
         tools.push(tool)
         createToolPage(tool)
       }
       page++
+
+      await new Promise(r => setTimeout(r, 1200 + Math.floor(Math.random() * 600)))
+      
     }
   }
-
   fs.writeFileSync(TOOLS_FILE, JSON.stringify(tools, null, 2))
   console.log("Total emulators:", tools.length)
 }
@@ -345,4 +301,16 @@ async function run() {
 // ==================================================
 //                    RUN SCRIPT
 // ==================================================
-run()
+async function main() {
+  try {
+    await run()
+    // ✅ save next batch index
+    lastBatchIndex = (lastBatchIndex + 1) % allBatches.length
+    fs.writeFileSync(batchFile, JSON.stringify({ lastBatchIndex }, null, 2))
+    console.log("Next batch index saved as:", lastBatchIndex)
+
+  } catch (err) {
+    console.error("Script failed:", err)
+  }
+}
+main()
